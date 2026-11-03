@@ -22,7 +22,6 @@ def get_nws(parameters, num_articles: int = 3):
     nws_response = requests.get(url=NWS_API_ENDPOINT, params=parameters)
     nws_response.raise_for_status()
     nws = nws_response.json()
-    len_articles = len(articles)
     index = 0
     while len(articles) < num_articles:
         if index >= len(nws['articles']):
@@ -149,7 +148,7 @@ def check_last_two_days(*args, number_of_articles, w_target: float = 0.3):
                     'apiKey': NWS_API_KEY
                 }
 
-                if  pct > w_target:
+                if  pct >= w_target:
                     print(f"Difference of {pct}% with {company['name']}\n{'#'*100}\n")
                     news = get_nws(nws_params, num_articles = number_of_articles)
                     msg += f"""
@@ -173,7 +172,7 @@ def check_last_two_days(*args, number_of_articles, w_target: float = 0.3):
                         msg+=f"""<p>No English news article found for {company['name']}</p>"""
 
 
-                elif pct < -1* w_target:
+                elif pct <= -1* w_target:
                     print(f"Difference of {pct}% with {company['name']}\n{'#'*100}\n")
 
                     news = get_nws(nws_params,  num_articles = number_of_articles)
