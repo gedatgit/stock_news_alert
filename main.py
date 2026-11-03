@@ -113,7 +113,7 @@ def get_stk_info(parameters: dict, day_of, size: int = 2) -> list[dict[str, Any]
 
 
 
-def check_last_two_days(*args, w_target: float = 0.3):
+def check_last_two_days(*args, number_of_articles, w_target: float = 0.3):
     header = f"Subject: Stock News\nMIME-Version: 1.0\nContent-Type: text/html; charset=utf-8\n\n"
     msg = header
 
@@ -151,7 +151,7 @@ def check_last_two_days(*args, w_target: float = 0.3):
 
                 if  pct > w_target:
                     print(f"Difference of {pct}% with {company['name']}\n{'#'*100}\n")
-                    news = get_nws(nws_params)
+                    news = get_nws(nws_params, num_articles = number_of_articles)
                     msg += f"""
                     <div>
                             <hr>
@@ -176,11 +176,12 @@ def check_last_two_days(*args, w_target: float = 0.3):
                 elif pct < -1* w_target:
                     print(f"Difference of {pct}% with {company['name']}\n{'#'*100}\n")
 
-                    news = get_nws(nws_params)
+                    news = get_nws(nws_params,  num_articles = number_of_articles)
                     msg += f"""
                     <div>
                             <hr>
                             <h2>{company['name']} 🔻{round(pct, 2)}%</h2>
+                            <hr>
                     </div>
                     """
                     if news:
@@ -235,12 +236,9 @@ requests_cache.install_cache(
         NWS_API_ENDPOINT:DO_NOT_CACHE
     },
     filter_fn=valid_stk_response
-
-
-
 )
 
-check_last_two_days( tesla, nvidia, delta, )
+check_last_two_days( tesla, nvidia, delta, w_target = 1,number_of_articles=6)
 
 
 
